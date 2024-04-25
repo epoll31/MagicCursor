@@ -26,6 +26,15 @@ export interface Coordinate {
   centerY: number;
 }
 
+const emptyCoordinate: Coordinate = {
+  x: 0,
+  y: 0,
+  width: 0,
+  height: 0,
+  centerX: 0,
+  centerY: 0,
+};
+
 function getRelativeCoordinates(
   event: MouseEvent,
   referenceElement: HTMLElement
@@ -81,7 +90,6 @@ export const DefaultMouse: MouseState = {
 
 export const MagicCursorContext = createContext({
   state: DefaultState,
-  mouse: DefaultMouse,
   locked: false,
   lock: (_ref: React.RefObject<HTMLDivElement>) => {},
   unlock: () => {},
@@ -91,82 +99,49 @@ export default function MagicCursorProvider(props: {
   children: React.ReactNode;
 }) {
   const outerRef = useRef<HTMLDivElement>(null);
-
-  const [state, setState] = useState(DefaultState);
-  const [mouse, setMouse] = useState(DefaultMouse);
-
-  const lock = (ref: React.RefObject<HTMLDivElement>) => {
-    setState({
-      ...state,
-      lockRef: ref,
-    });
-  };
-  const unlock = () => {
-    setState({
-      ...state,
-      lockRef: undefined,
-    });
-  };
+  const [mouse, setMouse] = useState(emptyCoordinate);
 
   const handleMouseMove: MouseEventHandler = (
     e: MouseEvent<HTMLDivElement>
   ) => {
     if (!outerRef.current) {
-      setMouse(DefaultMouse);
+      setMouse(emptyCoordinate);
       return;
     }
 
-    setMouse({
-      ...mouse,
-      coord: getRelativeCoordinates(e, outerRef.current),
-    });
+    setMouse(getRelativeCoordinates(e, outerRef.current));
   };
 
   const handleMouseEnter: MouseEventHandler = () => {
-    setMouse({
-      ...mouse,
-      hover: true,
-    });
+    setMouse(emptyCoordinate);
   };
   const handleMouseLeave: MouseEventHandler = () => {
-    setMouse({
-      ...mouse,
-      hover: false,
-    });
+    setMouse(emptyCoordinate);
   };
 
   return (
-    <MagicCursorContext.Provider
-      value={{
-        state,
-        locked: state.lockRef !== undefined,
-        lock,
-        unlock,
-        mouse,
-      }}
+    <div
+      className="w-fit h-fit relative"
+      ref={outerRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      <div
-        className="w-fit h-fit relative"
-        ref={outerRef}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        {props.children}
-        <motion.div
-          className={`relative -translate-x-1/2 -translate-y-1/2 pointer-events-none bg-red-400 w-4 h-4 rounded-full`}
-          // variants={{
-          //   following: followingVariant,
-          //   locked: lockVariant,
-          // }}
-          initial="following"
-          // animate={locked ? "locked" : "following"}
-          animate={{
-            x: mouse.coord.x,
-            y: mouse.coord.y,
-          }}
-        />
-      </div>
-    </MagicCursorContext.Provider>
+      {props.children}
+      <motion.div
+        className={`bg-red-400`}
+        style={{
+          position: "absolute",
+          width: "20px",
+          height: "20px",
+          margin: "-10px",
+          borderRadius: 10,
+        }}
+        animate={{
+          x: mouse.x,
+          y: mouse.y,
+        }}
+      />
+    </div>
   );
 }

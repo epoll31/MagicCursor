@@ -21,7 +21,7 @@ function App() {
           </h1>
           <h2 className="text-xl text-neutral-200 text-center">by epoll31</h2>
         </div>
-        <CursorLock
+        {/* <CursorLock
           noLock
           className="grid grid-rows-3 grid-cols-3 gap-5 w-[600px] h-min justify-center items-center z-10"
         >
@@ -72,7 +72,7 @@ function App() {
             className="rounded-2xl bg-orange-500 row-start-3 row-span-1 col-start-3 col-span-1 aspect-square"
             // lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out"
           ></CursorLock>
-        </CursorLock>
+        </CursorLock> */}
       </div>
     </MagicCursorProvider>
   );
