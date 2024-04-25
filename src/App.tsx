@@ -1,10 +1,6 @@
 import "./App.css";
-import {
-  MagicCursor,
-  CursorLock,
-  MagicCursorProvider,
-  DefaultState,
-} from "./Components/MagicCursor";
+import CursorLock from "./Components/CursorLock";
+import MagicCursorProvider from "./Components/MagicCursorProvider";
 
 function Comp({ test }: { test?: boolean }) {
   console.log(test ? "use" : "dont use");
@@ -17,15 +13,7 @@ function Comp({ test }: { test?: boolean }) {
 
 function App() {
   return (
-    <MagicCursorProvider
-      value={{
-        ...DefaultState,
-        followingStyle: {
-          // animation: 'scaleUpDown 0.5s infinite alternate ease-in-out'
-          // transformOrigin: 'center',
-        },
-      }}
-    >
+    <MagicCursorProvider>
       <div className="fixed w-screen h-screen bg-neutral-700 flex flex-col gap-10 justify-center items-center -z-20">
         <div className="row-start-1 row-span-1 col-start-1 col-span-full">
           <h1 className="text-3xl text-neutral-200 text-center">
@@ -39,48 +27,50 @@ function App() {
         >
           <CursorLock
             holdLock
-            className="rounded-2xl bg-red-500 row-start-1 row-span-1 col-start-1 col-span-1 aspect-square z-20 "
-            lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out z-10"
+            normalVariant={{ scale: 1 }}
+            lockVariant={{ scale: 1.1 }}
+            className="rounded-2xl bg-red-500 row-start-1 row-span-1 col-start-1 col-span-1 aspect-square z-20"
+            // lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out z-10"
           ></CursorLock>
           <CursorLock
             holdLock
             className="rounded-2xl bg-green-500 row-start-1 row-span-1 col-start-2 col-span-1 aspect-square"
-            lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out"
+            // lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out"
           ></CursorLock>
           <CursorLock
             holdLock
             className="rounded-2xl bg-blue-500 row-start-1 row-span-1 col-start-3 col-span-1 aspect-square"
-            lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out"
+            // lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out"
           ></CursorLock>
           <CursorLock
             holdLock
             className="rounded-2xl bg-yellow-500 row-start-2 row-span-1 col-start-1 col-span-1 aspect-square"
-            lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out"
+            // lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out"
           ></CursorLock>
           <CursorLock
             holdLock
             className="rounded-2xl bg-purple-500 row-start-2 row-span-1 col-start-2 col-span-1 aspect-square"
-            lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out"
+            // lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out"
           ></CursorLock>
           <CursorLock
             holdLock
             className="rounded-2xl bg-pink-500 row-start-2 row-span-1 col-start-3 col-span-1 aspect-square"
-            lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out"
+            // lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out"
           ></CursorLock>
           <CursorLock
             holdLock
             className="rounded-2xl bg-indigo-500 row-start-3 row-span-1 col-start-1 col-span-1 aspect-square"
-            lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out"
+            // lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out"
           ></CursorLock>
           <CursorLock
             holdLock
             className="rounded-2xl bg-cyan-500 row-start-3 row-span-1 col-start-2 col-span-1 aspect-square"
-            lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out"
+            // lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out"
           ></CursorLock>
           <CursorLock
             holdLock
             className="rounded-2xl bg-orange-500 row-start-3 row-span-1 col-start-3 col-span-1 aspect-square"
-            lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out"
+            // lockClassName="w-[200px] h-[200px] rounded-2xl bg-neutral-200 backdrop-invert transition-all duration-300 ease-in-out"
           ></CursorLock>
         </CursorLock>
       </div>
