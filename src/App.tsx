@@ -1,5 +1,5 @@
 import "./App.css";
-import CursorLock from "./Components/CursorLock";
+// import CursorLock from "./Components/CursorLock";
 import MagicCursorProvider from "./Components/MagicCursorProvider";
 
 function Comp({ test }: { test?: boolean }) {
