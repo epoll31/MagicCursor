@@ -1,89 +1,68 @@
-import React, {
-  useState,
-  useRef,
-  useCallback,
-  useEffect,
-  MouseEvent,
-} from "react";
-import { motion, useMotionValue, useWillChange } from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
 
-interface MousePosition {
-  x: number;
-  y: number;
-}
+export const MagicCursorContext = React.createContext<{
+  locked: boolean;
+  lock: (ref: React.RefObject<HTMLElement>) => void;
+  unlock: () => void;
+}>({
+  locked: false,
+  lock: () => {},
+  unlock: () => {},
+});
 
 const MagicCursorProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const outerRef = useRef<HTMLDivElement>(null);
-  // const [mouse, setMouse] = useState<MousePosition>({ x: 0, y: 0 });
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  // const updateMousePosition = useCallback((position: MousePosition) => {
-  //   // setMouse(position);
-  //   x.set(position.x);
-  //   y.set(position.y);
-  // }, []);
-
-  // const handleMouseMove = useCallback((event: MouseEvent) => {
-  //   requestAnimationFrame(() => {
-  //     if (outerRef.current) {
-  //       const rect = outerRef.current.getBoundingClientRect();
-  //       // const x = event.clientX - rect.left - 10; // 10 is half the size of the cursor (20px)
-  //       // const y = event.clientY - rect.top - 10;
-  //       x.set(event.clientX - rect.left - 10);
-  //       y.set(event.clientY - rect.top - 10);
-  //     }
-  //   });
-  // }, []);
-
-  // useEffect(() => {
-  //   const handle = outerRef.current;
-  //   if (handle) {
-  //     handle.addEventListener("mousemove", handleMouseMove as any);
-
-  //     return () => {
-  //       handle.removeEventListener("mousemove", handleMouseMove as any);
-  //     };
-  //   }
-  // }, [handleMouseMove]);
+  const [lock, setLock] = useState<React.RefObject<HTMLElement> | null>(null);
 
   useEffect(() => {
-    const handle = outerRef.current;
-    if (handle) {
-      const handleMouseMove = (event: MouseEvent) => {
-        requestAnimationFrame(() => {
-          const rect = handle.getBoundingClientRect();
-          x.set(event.clientX - rect.left - 10);
-          y.set(event.clientY - rect.top - 10);
-        });
-      };
-      handle.addEventListener("mousemove", handleMouseMove as any);
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!outerRef.current) return;
+      const x =
+        e.clientX -
+        outerRef.current.offsetLeft -
+        outerRef.current.offsetWidth / 2;
+      const y =
+        e.clientY -
+        outerRef.current.offsetTop -
+        outerRef.current.offsetHeight / 2;
 
-      return () => {
-        handle.removeEventListener("mousemove", handleMouseMove as any);
-      };
-    }
-  }, [x, y]);
+      outerRef.current.style.setProperty("--magic-cursor-x", `${x}px`);
+      outerRef.current.style.setProperty("--magic-cursor-y", `${y}px`);
+    };
+
+    outerRef.current?.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      outerRef.current?.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log("lock", lock);
+  }, [lock]);
 
   return (
-    <div ref={outerRef} className="relative w-fit h-fit">
-      {children}
-      <motion.div
-        className="absolute bg-red-400"
-        style={{
-          width: "20px",
-          height: "20px",
-          translate: "-50%, -50%",
-          borderRadius: "10px",
-        }}
-        animate={{
-          x: x.get(),
-          y: y.get(),
-        }}
-      />
-    </div>
+    <MagicCursorContext.Provider
+      value={{
+        locked: !!lock,
+        lock: (ref) => {
+          setLock(ref);
+        },
+        unlock: () => {
+          setLock(null);
+        },
+      }}
+    >
+      <div
+        ref={outerRef}
+        className="relative w-fit h-fit group/magic-cursor-provider "
+      >
+        {children}
+        <div className=" pointer-events-none absolute bg-red-400 w-5 h-5 rounded-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2  animate-magic-cursor-exit group-hover/magic-cursor-provider:animate-magic-cursor-enter" />
+      </div>
+    </MagicCursorContext.Provider>
   );
 };
 
